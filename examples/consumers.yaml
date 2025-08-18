@@ -1,0 +1,77 @@
+consumers:
+  - id: example-consumer
+    name: "Example Consumer"
+    description: "This is an example consumer for demonstration purposes."
+    enabled: true
+    tags:
+      - example
+      - consumer
+    metadata:
+      team: example
+      project: bullg
+    policies:
+      - id: cors
+        name: "CORS Policy"
+        description: "Handles Cross-Origin Resource Sharing (CORS) requests"
+        enabled: true
+        version: "1.0.0"
+        type: "builtin"
+
+    authentication:
+      enabled: true
+      api_key:
+        - key: "example-api-key"
+          description: "API Key for Example Consumer"
+          enabled: true
+          tags:
+            - example
+            - api_key
+      jwt:
+        - secret: "example-secret"
+          issuer: "example-issuer"
+          audience: "example-audience"
+          public_key: "-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----"
+          enabled: true
+          tags:
+            - example
+            - jwt
+
+      oauth:
+        - client_id: "example-client-id"
+          client_secret: "example-client-secret"
+          token_url: "https://example.com/oauth/token" # Optional, if not provided it will use the default token URL for Gateway inbuilt
+          scopes:
+            - read
+            - write
+          enabled: true
+          tags:
+            - example
+            - oauth
+
+apps:
+  - id: example-app
+    secret: "example-app-secret"
+    name: "Example Application"
+    description: "This is an example application for demonstration purposes."
+    enabled: true
+    tags:
+      - example
+      - app
+    metadata:
+      team: example
+      project: bullg
+
+
+consumer-groups:
+  - id: example-consumer-group
+    name: "Example Consumer Group"
+    description: "This is an example consumer group for demonstration purposes."
+    consumers:
+      - example-consumer
+    enabled: true
+    tags:
+      - example
+      - consumer_group
+    metadata:
+      team: example
+      project: bullg

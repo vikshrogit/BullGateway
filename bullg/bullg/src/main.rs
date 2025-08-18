@@ -16,6 +16,10 @@ struct Args {
     /// Path to config file (yaml/json/toml)
     #[arg(short, long, default_value = "./config.yaml")]
     config: String,
+    #[arg(short, long, default_value = "")]
+    service: String,
+    #[arg(short, long, default_value = "")]
+    plugins: String,
 }
 
 #[tokio::main(flavor = "multi_thread")]

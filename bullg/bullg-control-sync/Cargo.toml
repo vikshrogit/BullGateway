@@ -2,7 +2,7 @@
 [package]
 name = "bullg-control-sync"
 version = "1.0.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 anyhow = { workspace = true }

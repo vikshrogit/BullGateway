@@ -1,0 +1,233 @@
+# This Yaml is used for Plugins Configuration
+# It contains logic for plugins, including their names, logic while for builtin plugins generate rust code for plugins handlers
+
+# for each builtin plugins in bullg_plugins package create multiple plugins folder with their names, schema, and handler as library which is used by bullg binary
+# for custom plugins create language specific folder with their names as library which is used by bullg binary which is used at runtime for custom plugins as per below structure for particular language so that it can be faster executions
+plugins:
+  builtin:
+    - id: cors # ID for the CORS plugin
+      name: "Cors Plugin"
+      description: "Handles Cross-Origin Resource Sharing (CORS) requests"
+      icon: "cors_icon.png" # Icon for the CORS plugin or link to the icon file
+      tags: # Tags for the CORS plugin, can be used for filtering or grouping
+        - cors
+        - security
+        - builtin
+        - bullg
+      enabled: true # Enable or disable the CORS plugin
+      version: "1.0.0" # Version of the CORS plugin
+      type: "builtin" # Type of the plugin, can be 'builtin' or 'custom'
+      phases: # Phases in which the plugin will be executed, can be 'pre' or 'post' or 'import'
+        - pre # Pre-phase execution
+      schema: # Schema for the CORS plugin
+        id: "bullg::plugins::cors_schema" # ID for the schema of the CORS plugin
+        name: "CorsPluginSchema" # Name of the schema
+        description: "Schema for CORS plugin configuration" # Description of the schema
+        type: object # Type of the schema
+        properties: # Properties of the schema
+          allow_origin: # Allowed origins for CORS requests
+            type: string
+            description: "Allowed origin for CORS requests"
+          allow_methods: # Allowed methods for CORS requests
+            type: array
+            items:
+              type: string
+            description: "Allowed methods for CORS requests"
+          allow_headers: # Allowed headers for CORS requests
+            type: array
+            items:
+              type: string
+            description: "Allowed headers for CORS requests"
+        required:
+          - allow_origin # Required property for allowed origin
+          - allow_methods # Required property for allowed methods
+          - allow_headers # Required property for allowed headers
+        handler:
+          id: "bullg::plugins::cors_handler" # ID for the handler of the CORS plugin
+          name: "cors_handler" # Name of the handler for the CORS plugin (This will be generated in Rust)
+          language: rust # Language for the plugin handler
+          code: | # Code for the CORS plugin handler which will used under Apply Function inside Plugins class for Builtin Plugins
+            // Rust code for the CORS plugin handler
+            fn map_value_to_schema(config: &str) -> Result<BullGPluginSchema, String> {
+              let schema = get_schema();
+              let parsed: serde_json::Value = serde_json::from_str(config).map_err(|e| e.to_string())?;
+              if let serde_json::Value::Object(map) = parsed {
+                let mut properties = std::collections::HashMap::new();
+                for (key, value) in map {
+                  match key.as_str() {
+                    "allow_origin" => properties.insert("allow_origin".to_string(), PluginProperty::String),
+                    "allow_methods" => properties.insert("allow_methods".to_string(), PluginProperty::Array(Box::new(PluginProperty::String))),
+                    "allow_headers" => properties.insert("allow_headers".to_string(), PluginProperty::Array(Box::new(PluginProperty::String))),
+                    _ => continue,
+                  };
+                }
+                Ok(BullGPluginSchema {
+                  id: schema.id,
+                  name: schema.name,
+                  description: schema.description,
+                  type: schema.type,
+                  properties,
+                  required: schema.required,
+                })
+              } else {
+                Err("Invalid configuration format".to_string())
+              }
+            }
+            fn handle_cors_request(bullg: BullGContext) -> BullGContext {
+              // Logic to handle CORS requests
+              let mapped_schema = map_value_to_schema(bullg.plugins.pre.cors.config);
+              if let Ok(schema) = mapped_schema {
+                // Process the CORS request based on the schema
+                bullg.response.headers.insert("Access-Control-Allow-Origin", schema.properties.get("allow_origin").unwrap().to_string());
+                bullg.response.headers.insert("Access-Control-Allow-Methods", schema.properties.get("allow_methods").unwrap().to_string());
+                bullg.response.headers.insert("Access-Control-Allow-Headers", schema.properties.get("allow_headers").unwrap().to_string());
+              } else {
+                // Handle error in mapping schema
+                bullg.response.status = 500;
+                bullg.response.body = "Internal Server Error".to_string();
+              }
+              bullg
+            }
+
+  custom:
+    - id: custom-auth # ID for the Custom Auth plugin
+      name: "Custom Auth Plugin"
+      description: "Handles custom authentication logic"
+      enabled: true # Enable or disable the Custom Auth plugin
+      version: "1.0.0" # Version of the Custom Auth plugin
+      type: "custom" # Type of the plugin, can be 'builtin' or 'custom'
+      icon: "custom_auth_icon.png" # Icon for the Custom Auth plugin or link to the icon file
+      tags: # Tags for the Custom Auth plugin, can be used for filtering or grouping
+        - authentication
+        - custom
+      phases:
+        - pre # Pre-phase execution
+      schema:
+        id: "bullg::plugins::custom_auth_schema" # ID for the schema of the Custom Auth plugin
+        name: "CustomAuthPluginSchema" # Name of the schema
+        description: "Schema for Custom Auth plugin configuration" # Description of the schema
+        type: object # Type of the schema
+        properties:
+          auth_type: # Type of authentication (e.g., JWT, OAuth)
+            type: string
+            description: "Type of authentication to use"
+          token_secret: # Secret key for token validation
+            type: string
+            description: "Secret key for validating tokens"
+        required:
+          - auth_type # Required property for authentication type
+          - token_secret # Required property for token secret
+        handler:
+          id: "bullg::plugins::custom_auth_handler" # ID for the handler of the Custom Auth plugin
+          name: "custom_auth_handler" # Name of the handler for the Custom Auth plugin (This will be generated in Rust)
+          language: python # Language for the plugin handler
+          code: | # Code for the Custom Auth plugin handler which will used under Apply Function inside Plugins class for Custom Plugins
+            // Python code for the Custom Auth plugin handler
+            def map_value_to_schema(config):
+                schema = get_schema()
+                parsed = json.loads(config)
+                properties = {}
+                for key, value in parsed.items():
+                    if key == "auth_type":
+                        properties["auth_type"] = "string"
+                    elif key == "token_secret":
+                        properties["token_secret"] = "string"
+                return {
+                    "id": schema["id"],
+                    "name": schema["name"],
+                    "description": schema["description"],
+                    "type": schema["type"],
+                    "properties": properties,
+                    "required": schema["required"]
+                }
+
+            def handle_custom_auth_request(bullg):
+                mapped_schema = map_value_to_schema(bullg.plugins.pre.custom_auth.config)
+                if mapped_schema:
+                    # Process the custom auth request based on the schema
+                    bullg.response.headers["X-Custom-Auth-Type"] = mapped_schema["properties"]["auth_type"]
+                    bullg.response.headers["X-Custom-Token-Secret"] = mapped_schema["properties"]["token_secret"]
+                else:
+                    # Handle error in mapping schema
+                    bullg.response.status = 500
+                    bullg.response.body = "Internal Server Error"
+                return bullg
+
+  # Add more plugins as needed
+  # Each plugin can have its own schema and handler logic
+
+policies:
+  - id: rate-limiting # ID for the Rate Limiting policy
+    name: "Rate Limiting Policy"
+    description: "Limits the number of requests from a client"
+    icon: "rate_limiting_icon.png" # Icon for the Rate Limiting policy or link to the icon file
+    tags: # Tags for the Rate Limiting policy, can be used for filtering or grouping
+      - rate_limiting
+      - security
+      - builtin
+      - bullg
+    enabled: true # Enable or disable the Rate Limiting policy
+    version: "1.0.0" # Version of the Rate Limiting policy
+    type: "builtin" # Type of the policy, can be 'builtin' or 'custom'
+    phases:
+      - pre # Pre-phase execution
+    schema:
+      id: "bullg::policies::rate_limiting_schema" # ID for the schema of the Rate Limiting policy
+      name: "RateLimitingPolicySchema" # Name of the schema
+      description: "Schema for Rate Limiting policy configuration" # Description of the schema
+      type: object # Type of the schema
+      properties:
+         # Generate based on Global Based Policies schema which is used in Service Configurations
+      handler:
+        id: "bullg::policies::rate_limiting_handler" # ID for the handler of the Rate Limiting policy
+        name: "rate_limiting_handler" # Name of the handler for the Rate Limiting policy (This will be generated in Rust)
+        language: rust # Language for the policy handler
+        code: | # Code for the Rate Limiting policy handler which will used under Apply Function  
+          # Generate Rust code for the Rate Limiting policy handler
+
+      # Add other policies same like below structure
+
+# Below is Lists of builtin Policies which are used in Bullg Gateway or Tenant Plane and need to be implemented for each policy compulsory
+required_policies: # Must be implemented for each policy
+    - rate_limiting # Rate Limiting policy
+    - concurrency
+    - throughput
+    - timeout
+    - circuit_breaker
+    - retry
+    - load_balancing
+
+required_plugins: # Must be implemented for each plugin as builtin plugins compulsory
+    - cors # CORS plugin
+    - oauth # Custom Auth plugin
+    - jwt # JWT plugin
+    - basic_auth # Basic Auth plugin
+    - ip_restriction # IP Restriction plugin
+    - request_validation # Request Validation plugin Based on Schema Passed
+    - http_logging # HTTP Logging plugin
+    - request_caching # Request Caching plugin
+    - response_caching # Response Caching plugin
+    - request_compression # Request Compression plugin
+    - response_compression # Response Compression plugin
+    - request_id # Request ID plugin for Custom Request ID generation
+    - request_transformation # Request Transformation plugin including headers, body, and query parameters based on condition with headers key and value, body key and value, query parameters key and value
+    - response_transformation # Response Transformation plugin including headers, body, and query parameters based on condition with headers key and value, body key and value, query parameters key and value
+    - request_redirection # Request Redirection plugin for redirecting requests to different endpoints based on conditions
+    - response_redirection # Response Redirection plugin for redirecting responses to different endpoints based on conditions
+    - termination # Termination plugin for terminating requests based on conditions
+    - echo # Echo plugin for echoing requests and responses
+    - conditional_execution # Conditional Execution plugin for executing plugins based on conditions it will set conditions based group of plugins and their execution order
+    - sqlinjection_protection # SQL Injection Protection plugin for protecting against SQL injection attacks
+    - xss_protection # XSS Protection plugin for protecting against XSS attacks
+    - csrf_protection # CSRF Protection plugin for protecting against CSRF attacks
+    - content_security_policy # Content Security Policy plugin for setting content security policies
+    - ddos_protection # DDoS Protection plugin for protecting against DDoS attacks
+    - bot_detection # Bot Detection plugin for detecting and blocking bots
+    - api_key_validation # API Key Validation plugin for validating API keys
+    - request_throttling # Request Throttling plugin for throttling requests based on conditions
+    - response_throttling # Response Throttling plugin for throttling responses based on conditions
+    - javascript_execution # JavaScript Execution plugin for executing JavaScript code in requests and responses
+    - python_execution # Python Execution plugin for executing Python code in requests and responses
+    - javascript_injection_protection # JavaScript Injection Protection plugin for protecting against JavaScript injection attacks
+    - python_injection_protection # Python Injection Protection plugin for protecting against Python injection attacks
+

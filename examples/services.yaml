@@ -1,0 +1,501 @@
+# Service Structure for BullG Gateway Version 1.0.1
+# This file defines the structure of services, Applied plugins, and Applied policies for the BullG Gateway.
+gateway: BullG
+version: 1.0.1
+release: dev
+bullg-versions: # This is version for internal Application manager which give info which version of dataplanes supports this structures
+  - 1.0.1
+developer: bullg@vikshro.in
+global:
+  plugins: # These are reusable components that can be applied to multiple services and also customize by User based on Language
+    - id: global-plugin
+      version: 1.0.0
+      name: Global Plugin
+      description: A plugin that applies to all services
+      tags: [global, plugin] # Tags are used for categorizing and identifying plugins
+      type: cors # Type for Policies or Plugins refers to the functionality they provide in program like builtin or User based plugin id
+      phase: pre
+      enabled: true
+      config:
+        allow_origin: "*"
+        allow_methods: "GET, POST, PUT, DELETE, OPTIONS"
+        allow_headers: "Content-Type, Authorization"
+        expose_headers: "X-Total-Count"
+        max_age: 3600
+        allow_credentials: true
+  policies: # These Are Inbuilt Policy to manage builtin NFRs Managed Policies and different from Plugins
+    - id: global-rate-limit
+      name: Global Rate Limit
+      description: A policy that applies to all services
+      type: rate_limit
+      tags: [global, policy] # Tags are used for categorizing and identifying policies
+      enabled: true
+      config:
+        type: dynamic
+        rate: 100
+        burst: 10
+        period: 1m # Can be 1s, 1m, 1h, 1d
+      error:
+        status_code: 429
+        message: "Too Many Requests"
+    
+    - id: global-timeout
+      name: Global Timeout
+      description: A policy that applies to all services
+      type: timeout
+      tags: [global, policy]
+      enabled: true
+      config:
+        timeout: 30s # Can be 1s, 1m, 1h, 1d
+        error:
+          status_code: 408
+          message: "Request Timeout"
+
+    - id: global-throughput
+      name: Global Throughput
+      description: A policy that applies to all services
+      type: throughput
+      tags: [global, policy]
+      enabled: true
+      config:
+        max_requests: 1000
+        period: 1m # Can be 1s, 1m, 1h, 1d
+        error:
+          status_code: 503
+          message: "Quota Exceeded"
+
+    - id: global-concurrency
+      name: Global Concurrency
+      description: A policy that applies to all services
+      type: concurrency
+      tags: [global, policy]
+      enabled: true
+      config:
+        type: dynamic
+        max_concurrent_requests: 100
+        period: 1m # Can be 1s, 1m, 1h, 1d
+        error:
+          status_code: 429
+          message: "Too Many Requests"
+
+services:
+  - id: svc-dummy
+    name: Dummy Services
+    description: A dummy service for testing purposes
+    tags: [dummy, test] # Tags are use for categorizing and identifying services also in Log Monitoring including documentations
+    protocols: # Supported Protocols for the Service
+      - http
+      - https
+      - ws
+      - wss
+      - grpc
+    spec: # This will Tell to Create one Inbuilt route for service which will display OpenAPI documentation for current service on route e.g. for this example Dummy Service when user call either both version contextpath like /dummy/svc/v1/docs or /dummy/svc/v2/docs it will generate OpenAPI documentation based on Versions
+      enabled: true
+      route: /docs
+      versions: # This denotes which version of Service will support OpenAPI Documentation
+        - v1
+        - v2
+    versions: # Services Version Details by default for 1st Version it will generate V1 automatically
+      - id: v1
+        name: version 1
+        enabled: true
+        description: The first version of the dummy service
+        deprecated: false
+      - id: v2
+        name: version 2
+        enabled: true
+        description: The second version of the dummy service
+        deprecated: false
+    upstreams: # Backend Upstream Details for Services based on Supported Version, this will tell which upstream services are available for each version, Versions supports for each enabled upstream with each protocols must be unique across all services and one upstream can support multiple versions while those version not allowed in other upstreams
+      - id: upstream-1
+        name: Upstream Service 1
+        description: The first upstream service
+        tags: [upstream, service]
+        protocols: # Supported Protocols for the Upstream Service it must be match with Service is configured for that Protocols or not
+          - http
+          - https
+        host: dummy-json.mock.beeceptor.com # Hostname for the upstream service
+        port: 443 # Port for the upstream service
+        enabled: true # Whether the upstream service is enabled
+        versions: # Service Versions Support by Upstreams
+          - v1
+      - id: upstream-2
+        name: Upstream Service 2
+        description: The second upstream service
+        tags: [upstream, service]
+        protocols:
+          - http
+          - https
+          - ws
+          - wss
+        host: dummyjson.com # Hostname for the upstream service
+        port: 443 # Port for the upstream service
+        enabled: true # Whether the upstream service is enabled
+        versions: # Service Versions Support by Upstreams
+          - v2
+    contextPaths: # Context path for Each Services which is responsible for Gateway Path included it to call these service routes these paths must be unique across all services. If services have multiple version then context path automatically add versions like v1 in it if context path is same and for each version different context path no need to add versions
+      enable: true
+      paths:
+        - path: /dummy/svc/v1
+          versions: # Service Versions Support by Context Path
+            - v1
+        - path: /dummy/svc/v2
+          versions:
+            - v2
+    plugins: # Plugins to be applied to the service
+      - id: plugin-cors
+        name: CORS Plugin
+        description: Handles Cross-Origin Resource Sharing (CORS) requests
+        type: cors
+        tags: [dummy, cors, plugin] # Tags are used for categorizing and identifying plugins
+        enabled: true
+        version: 1.0
+        versions: # Service Versions Support by Plugins which is only applicable for particular versions
+          - v1
+        phase: pre
+        config:
+          allow_origin: "*"
+          allow_methods: "GET, POST, PUT, DELETE, OPTIONS"
+          allow_headers: "Content-Type, Authorization"
+          expose_headers: "X-Total-Count"
+          max_age: 3600
+          allow_credentials: true
+        order: 1
+        priority: 100
+        
+      - id: plugin-auth
+        name: Authentication Plugin
+        description: Handles authentication for the API
+        type: oauth
+        tags: [dummy, auth, plugin] # Tags are used for categorizing and identifying plugins
+        phase: pre
+        enabled: true
+        version: 1.0.1
+        versions:
+          - v1
+          - v2
+        config:
+          auth_header: "Authorization"
+          token_type: "Bearer"
+          enable: true
+        order: 2
+        priority: 200
+
+      - id: response-transformer
+        name: Response Transformer
+        description: Transforms the API response
+        type: transformer
+        tags: [dummy, transformer, plugin] # Tags are used for categorizing and identifying plugins
+        phase: post
+        enabled: true
+        version: 1.0
+        versions:
+          - v1
+        config:
+          rules:
+            - from: $.data
+              to: $.response
+        order: 3
+        priority: 300
+    policies: # Policies to be applied to the service to manage Service Level NFRs
+      - id: policy-1
+        name: Policy 1
+        description: A sample policy
+        type: rate_limit
+        tags: [dummy, rate-limit, policy]
+        enabled: true
+        version: # Service Versions Support by Policies
+          - v1
+          - v2
+        config:
+          type: static
+          rate: 100
+          burst: 10
+          period: 1m
+          error:
+            status_code: 429
+            message: "Too Many Requests"
+    consumers: # Consumers Details for Services based on Supported Version
+      - id: consumer-1
+        enabled: true
+        versions: # Service Versions Support by Consumers
+          - v1
+
+      - id: consumer-2
+        enabled: true
+        versions: # Service Versions Support by Consumers
+          - v2
+    routes: # Routes Configuration for Services
+      - id: get_users
+        name: Get Users
+        description: Retrieves a list of users
+        tags: [users, list] # Tags are used for categorizing and identifying routes
+        enabled: true
+        versions: # Service Versions Support by Routes
+          - v1
+          - v2
+        config: # Route Configuration
+          protocols:
+            - http
+            - https
+          path: /users # API path for the route
+          backend: /users # Backend service for the route used by Upstream
+          methods: 
+            - GET
+        plugins: # Plugins to be applied to the route
+          - id: consumer-check
+            version: 1.0.0
+            name: Consumer Check Plugin
+            description: Checks if the consumer is allowed to access the API
+            tags: [dummy, consumer-check, plugin] # Tags are used for categorizing and identifying plugins
+            phase: pre
+            type: consumer_check
+            enabled: true
+            config:
+              allowed_consumers:
+                - consumer-1
+                - consumer-2
+            order: 1
+            priority: 100
+
+      - id: get_user_by_id
+        name: Get User By ID
+        description: Retrieves a user by their ID
+        tags: [users, get, route] # Tags are used for categorizing and identifying routes
+        enabled: true
+        versions:
+          - v2
+        config:
+          protocols:
+            - http
+            - https
+          path: /usr/:id
+          backend: /users/:id
+          methods:
+            - GET
+        plugins:
+          - id: consumer-check
+            version: 1.0.0
+            name: Consumer Check Plugin
+            description: Checks if the consumer is allowed to access the API
+            tags: [dummy, consumer-check, plugin] # Tags are used for categorizing and identifying plugins
+            phase: pre
+            type: consumer_check
+            enabled: true
+            config:
+              allowed_consumers:
+                - consumer-1
+                - consumer-2
+            order: 1
+            priority: 100
+  
+  - id: svc-dummy-test
+    name: Dummy Services test
+    description: A dummy service for testing purposes
+    tags: [dummy, test] # Tags are use for categorizing and identifying services also in Log Monitoring including documentations
+    protocols: # Supported Protocols for the Service
+      - http
+      - https
+      - ws
+      - wss
+      - grpc
+    spec: # This will Tell to Create one Inbuilt route for service which will display OpenAPI documentation for current service on route e.g. for this example Dummy Service when user call either both version contextpath like /dummy/svc/v1/docs or /dummy/svc/v2/docs it will generate OpenAPI documentation based on Versions
+      enabled: true
+      route: /docs
+      versions: # This denotes which version of Service will support OpenAPI Documentation
+        - v1
+        - v2
+    versions: # Services Version Details by default for 1st Version it will generate V1 automatically
+      - id: v1
+        name: version 1
+        enabled: true
+        description: The first version of the dummy service
+        deprecated: false
+      - id: v2
+        name: version 2
+        enabled: true
+        description: The second version of the dummy service
+        deprecated: false
+    upstreams: # Backend Upstream Details for Services based on Supported Version, this will tell which upstream services are available for each version, Versions supports for each enabled upstream with each protocols must be unique across all services and one upstream can support multiple versions while those version not allowed in other upstreams
+      - id: upstream-1
+        name: Upstream Service 1
+        description: The first upstream service
+        tags: [upstream, service]
+        protocols: # Supported Protocols for the Upstream Service it must be match with Service is configured for that Protocols or not
+          - http
+          - https
+        host: dummy-json.mock.beeceptor.com # Hostname for the upstream service
+        port: 443 # Port for the upstream service
+        enabled: true # Whether the upstream service is enabled
+        versions: # Service Versions Support by Upstreams
+          - v1
+      - id: upstream-2
+        name: Upstream Service 2
+        description: The second upstream service
+        tags: [upstream, service]
+        protocols:
+          - http
+          - https
+          - ws
+          - wss
+        host: dummyjson.com # Hostname for the upstream service
+        port: 443 # Port for the upstream service
+        enabled: true # Whether the upstream service is enabled
+        versions: # Service Versions Support by Upstreams
+          - v2
+    contextPaths: # Context path for Each Services which is responsible for Gateway Path included it to call these service routes these paths must be unique across all services. If services have multiple version then context path automatically add versions like v1 in it if context path is same and for each version different context path no need to add versions
+      enable: true
+      paths: # for this particular service both context path are unique for each versions so there is no need to add versions in context path
+        - path: /dummy/test/
+          versions: # Service Versions Support by Context Path
+            - v1
+        - path: /dummy/test/in/
+          versions:
+            - v2
+    plugins: # Plugins to be applied to the service
+      - id: plugin-cors
+        name: CORS Plugin
+        description: Handles Cross-Origin Resource Sharing (CORS) requests
+        type: cors
+        tags: [dummy, cors, plugin] # Tags are used for categorizing and identifying plugins
+        enabled: true
+        version: 1.0
+        versions: # Service Versions Support by Plugins which is only applicable for particular versions
+          - v1
+        phase: pre
+        config:
+          allow_origin: "*"
+          allow_methods: "GET, POST, PUT, DELETE, OPTIONS"
+          allow_headers: "Content-Type, Authorization"
+          expose_headers: "X-Total-Count"
+          max_age: 3600
+          allow_credentials: true
+        order: 1
+        priority: 100
+        
+      - id: plugin-auth
+        name: Authentication Plugin
+        description: Handles authentication for the API
+        type: oauth
+        tags: [dummy, auth, plugin] # Tags are used for categorizing and identifying plugins
+        phase: pre
+        enabled: true
+        version: 1.0.1
+        versions:
+          - v1
+          - v2
+        config:
+          auth_header: "Authorization"
+          token_type: "Bearer"
+          enable: true
+        order: 2
+        priority: 200
+
+      - id: response-transformer
+        name: Response Transformer
+        description: Transforms the API response
+        type: transformer
+        tags: [dummy, transformer, plugin] # Tags are used for categorizing and identifying plugins
+        phase: post
+        enabled: true
+        version: 1.0
+        versions:
+          - v1
+        config:
+          rules:
+            - from: $.data
+              to: $.response
+        order: 3
+        priority: 300
+    policies: # Policies to be applied to the service to manage Service Level NFRs
+      - id: policy-1
+        name: Policy 1
+        description: A sample policy
+        type: rate_limit
+        tags: [dummy, rate-limit, policy]
+        enabled: true
+        version: # Service Versions Support by Policies
+          - v1
+          - v2
+        config:
+          type: static
+          rate: 100
+          burst: 10
+          period: 1m
+          error:
+            status_code: 429
+            message: "Too Many Requests"
+    consumers: # Consumers Details for Services based on Supported Version
+      - id: consumer-1
+        enabled: true
+        versions: # Service Versions Support by Consumers
+          - v1
+
+      - id: consumer-2
+        enabled: true
+        versions: # Service Versions Support by Consumers
+          - v2
+    routes: # Routes Configuration for Services
+      - id: get_users
+        name: Get Users
+        description: Retrieves a list of users
+        tags: [users, list] # Tags are used for categorizing and identifying routes
+        enabled: true
+        versions: # Service Versions Support by Routes
+          - v1
+          - v2
+        config: # Route Configuration
+          protocols:
+            - http
+            - https
+          path: /users # API path for the route
+          backend: /users # Backend service for the route used by Upstream
+          methods: 
+            - GET
+        plugins: # Plugins to be applied to the route
+          - id: consumer-check
+            version: 1.0.0
+            name: Consumer Check Plugin
+            description: Checks if the consumer is allowed to access the API
+            tags: [dummy, consumer-check, plugin] # Tags are used for categorizing and identifying plugins
+            phase: pre
+            type: consumer_check
+            enabled: true
+            config:
+              allowed_consumers:
+                - consumer-1
+                - consumer-2
+            order: 1
+            priority: 100
+
+      - id: get_user_by_id
+        name: Get User By ID
+        description: Retrieves a user by their ID
+        tags: [users, get, route] # Tags are used for categorizing and identifying routes
+        enabled: true
+        versions:
+          - v2
+        config:
+          protocols:
+            - http
+            - https
+          path: /usr/:id
+          backend: /users/:id
+          methods:
+            - GET
+        plugins:
+          - id: consumer-check
+            version: 1.0.0
+            name: Consumer Check Plugin
+            description: Checks if the consumer is allowed to access the API
+            tags: [dummy, consumer-check, plugin] # Tags are used for categorizing and identifying plugins
+            phase: pre
+            type: consumer_check
+            enabled: true
+            config:
+              allowed_consumers:
+                - consumer-1
+                - consumer-2
+            order: 1
+            priority: 100
+  

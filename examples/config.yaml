@@ -1,51 +1,84 @@
 
+# This is the configuration file for the Bullg Gateway or Tenant Plane.
+# It contains settings for the Gateway, including proxy settings, logging, metrics, health checks,
+# tracing, control plane, database, memory engine, and more.
+# The configuration is in YAML format and can be modified as per the requirements.
+# Ensure to keep the structure intact while making changes.
+# The configuration is used to set up the Gateway or Tenant Plane for development, testing, or production environments.
+# The file is structured to allow easy modification and understanding of the settings.
+# It is User for Bullg Gateway or Tenant Plane for Version 1.0.1 onwards. It is not compatible with previous versions.
 gateway:
-  name: bullg-dev
+  name: bullg-dev # Name of the Gateway or Used for Hostname for Dataplane or Tenant Plane
+  id: bullg-dev-001 # Unique ID for the Gateway or Used for Hostname
+  type: dataplane # Type of the Gateway, can be 'dataplane' or 'tenantplane'
+  version: v1.0.1 # Version of the Gateway or Tenant Plane
+  tags: # Tags for the Gateway or Tenant Plane, can be used for filtering or grouping
+    - development
+    - example
+    - bullg
+  labels: # Labels for the Gateway or Tenant Plane, can be used for filtering or grouping
+    environment: development
+    team: example
+    project: bullg
+  description: "Bullg Gateway for Development" # Description of the Gateway Dataplane or Tenant Plane
+  proxy:
+    enabled: false # Enable or disable the proxy for the Gateway or Tenant Plane if false then it will only allow localhost access
+    domains: # Domains for the Gateway or Tenant Plane, can be used for routing or filtering only allowed domains can be used for routing otherwise it will throw unknown access error
+      - example.com
+      - api.example.com
   host: 0.0.0.0
-  port: 8000
+  port: 8000 # Port for the Gateway or Tenant Plane for HTTP1 without TLS, gRPC Without TLS, gRPC-Web Without TLS, Websocket Without TLS and No HTTP2 and HTTP3 allowed without TLS
   ssl: false
-  ssl_port: 8443
+  http3: false
+  ssl_port: 8443 # SSL Port will be same for HTTP1 with TLS, HTTP2, HTTP3, gRPC with TLS, gRPC-Web with TLS, Websocket with TLS
   cert: ""
   key: ""
   ca: ""
-  logging_mode: info
+  logging_mode: info # Logging mode for the Gateway or Tenant Plane, can be 'debug', 'info', 'warn', 'error', 'fatal'
+  access_log:
+    enabled: true # Enable or disable access logging for the Gateway or Tenant Plane
+    sname: true # Enable or disable Service Name (Crates Package Name for Tracing) in Access Logs for debug by default it is true
+    path: "console" # Path for the access log, can be 'console' for stdout or a file path
+    format: "text" # Format for the access log, can be 'json' or 'text'
+    max_size: 100 # Maximum size of the access log file in MB
+    max_backups: 10 # Maximum number of backup files for the access log
+    max_age: 30 # Maximum age of the access log files
+    compress: true # Enable or disable compression for the access log files
+  
+  metrics:
+    enabled: true # Enable or disable metrics collection
+    path: "/metrics" # Path for the metrics endpoint
+    port: 9090 # Port for the metrics endpoint
+    format: "prometheus" # Format for the metrics, can be 'prometheus' or 'json'
+  
+  health_check:
+    enabled: true # Enable or disable health check for the Gateway or Tenant Plane
+    path: "/health" # Path for the health check endpoint
+    port: 8080 # Port for the health check endpoint
 
-controlplane:
-  url: "ws://localhost:8000"
-  id: "bullg-001"
-  mtls_cert: ""
-  mtls_key: ""
-  mtls_ca: ""
-  https_fallback_url: "http://localhost:8000"
-  poll_interval_sec: 5
+  tracing:
+    enabled: false # Enable or disable tracing for the Gateway or Tenant Plane
+    otlp_endpoint: "http://localhost:4317" # OTLP endpoint for tracing
+    service_name: "bullg-gateway" # Service name for tracing
 
-tracing:
-  otlp_endpoint: "http://localhost:8000"
-  service_name: "bullg"
+  control_plane:
+    enabled: false # Enable or disable control plane for the Gateway or Tenant Plane
+    protocols: # Protocols supported by the control plane, can be 'http', 'https', 'ws', 'wss'
+      - https
+      - wss
+    host: "localhost" # URL for the control plane
+    id: "bullg-001" # Unique ID for the control plane
+    mtls_cert: "" # mTLS certificate for the control plane, Same used for HTTP fallback sync as public cert pass for token Generation
+    mtls_key: "" # mTLS key for the control plane
+    poll_interval_sec: 5 # Polling interval for the control plane in seconds
 
-memory:
-  engine: "lmdb"   # or "memory"
-  path: "./data/bullg.lmdb"
-
-# Minimal static services/routes until control-plane syncs
-services:
-  - id: "svc-dymmy"
-    name: "Dummy Services"
-    url: "https://dummy-json.mock.beeceptor.com"
-    routes:
-      - id: "r-roles"
-        path: "/roles"
-        methods: ["GET"]
-
-  - id: "svc-Users"
-    name: "Users Service"
-    url: "https://dummyjson.com"
-    routes:
-      - id: "r-users"
-        path: "/users"
-        methods: ["GET"]
-
-plugins:
-  global:
-    - { name: "cors", phase: "pre", config: { allow_origin: "*" } }
-    # - { name: "http_log", phase: "post", config: { endpoint: "http://localhost:8081/logs" } }
+  builtin:
+    enabled: true # Enable or disable built-in Gateway With Management Server so that it will connect automatically with control plane on own host
+  
+  database: # false for DBLess Gateway or Tenant Plane
+    enabled: false # Enable or disable database for the Gateway or Tenant Plane (for Heavy Load Gateway or Tenant Plane)
+    type: "sqlite" # Type of the database, can be 'sqlite', 'mysql', 'postgresql', 'mongodb', 'redis'
+  
+  memory: # Memory Engine for the Gateway or Tenant Plane, can be 'lmdb' or 'memory'
+    engine: "lmdb"   # or "memory"
+    path: "./data/bullg.lmdb" # Path for the memory engine, only used for 'lmdb' engine

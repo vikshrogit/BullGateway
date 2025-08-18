@@ -7,6 +7,7 @@ use reqwest::Client;
 use tokio::time::{sleep, Duration};
 use tokio_tungstenite::connect_async;
 use tracing::{error, info};
+//use core::slice::SlicePattern;
 
 pub struct SyncClient {
     ws_url: String,
@@ -55,7 +56,7 @@ impl SyncClient {
         while let Some(msg) = read.next().await {
             let msg = msg?;
             if msg.is_binary() {
-                let decrypted = bullg_utils::custom_decrypt(msg.into_data().as_slice())?;
+                let decrypted = bullg_utils::custom_decrypt(msg.into_data().as_ref())?;
                 let state: GatewayState = serde_json::from_slice(&decrypted)?;
                 on_state(state);
             }

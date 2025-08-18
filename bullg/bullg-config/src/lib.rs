@@ -89,7 +89,7 @@ pub struct PluginsCfg {
 pub fn load_config(path: &str) -> Result<FileConfig> {
     let content = fs::read_to_string(path).with_context(|| format!("read config {}", path))?;
     if path.ends_with(".yaml") || path.ends_with(".yml") {
-        Ok(serde_yaml::from_str(&content)?)
+        Ok(serde_yml::from_str(&content)?)
     } else if path.ends_with(".json") {
         Ok(serde_json::from_str(&content)?)
     } else if path.ends_with(".toml") {
