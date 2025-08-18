@@ -1,0 +1,15 @@
+
+[package]
+name = "bullg-tracing"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+opentelemetry = { workspace = true }
+opentelemetry_sdk = { workspace = true }
+opentelemetry-otlp = { workspace = true }
+tracing-opentelemetry = { workspace = true }
+anyhow = { workspace = true }
+opentelemetry-stdout = { workspace = true }

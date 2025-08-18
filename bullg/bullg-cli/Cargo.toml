@@ -1,0 +1,17 @@
+
+[package]
+name = "bullg-cli"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+anyhow = { workspace = true }
+clap = { workspace = true }
+tracing = { workspace = true }
+tokio = { workspace = true }
+bullg-config = { path = "../bullg-config" }
+bullg-gateway = { path = "../bullg-gateway" }
+bullg-control-sync = { path = "../bullg-control-sync" }
+bullg-tracing = { path = "../bullg-tracing" }
+bullg-memory = { path = "../bullg-memory" }
+bullg-core = { path = "../bullg-core" }

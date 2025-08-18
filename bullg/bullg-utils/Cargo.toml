@@ -1,0 +1,13 @@
+
+[package]
+name = "bullg-utils"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+anyhow = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+base64 = { workspace = true }
+uuid = { workspace = true }
+time = { workspace = true }

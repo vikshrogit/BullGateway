@@ -1,0 +1,11 @@
+vscode/
+.vscode
+.vscode/
+
+target/
+target
+
+*.lock
+
+data
+data/

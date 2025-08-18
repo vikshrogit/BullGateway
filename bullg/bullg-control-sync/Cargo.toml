@@ -1,0 +1,19 @@
+
+[package]
+name = "bullg-control-sync"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+anyhow = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+tokio-tungstenite = { workspace = true }
+tungstenite = { workspace = true }
+reqwest = { workspace = true }
+moka = { workspace = true }
+tracing = { workspace = true }
+futures-util = "0.3"
+bullg-core = { path = "../bullg-core" }
+bullg-utils = { path = "../bullg-utils" }

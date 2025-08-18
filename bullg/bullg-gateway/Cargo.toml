@@ -1,0 +1,24 @@
+
+[package]
+name = "bullg-gateway"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+anyhow = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+hyper = { workspace = true }
+hyper-util = { workspace = true }
+http = { workspace = true }
+http-body-util = { workspace = true }
+bytes = { workspace = true }
+tracing = { workspace = true }
+url = { workspace = true }
+reqwest = { workspace = true }
+dashmap = { workspace = true }
+bullg-core = { path = "../bullg-core" }
+bullg-plugin-api = { path = "../bullg-plugin-api" }
+bullg-plugins = { path = "../bullg-plugins" }
+bullg-memory = { path = "../bullg-memory" }

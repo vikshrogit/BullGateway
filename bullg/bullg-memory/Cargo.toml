@@ -1,0 +1,14 @@
+
+[package]
+name = "bullg-memory"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+anyhow = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+heed = { workspace = true }
+tempfile = { workspace = true }
+dashmap = { workspace = true }
+rmp-serde = { workspace = true }

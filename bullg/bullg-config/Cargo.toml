@@ -1,0 +1,14 @@
+
+[package]
+name = "bullg-config"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+serde_yaml = { workspace = true }
+toml = { workspace = true }
+anyhow = { workspace = true }
+tracing = { workspace = true }
+bullg-core = { path = "../bullg-core" }

@@ -1,0 +1,80 @@
+[workspace]
+members = [
+  "bullg/bullg-cli",
+  "bullg/bullg-core",
+  "bullg/bullg-config",
+  "bullg/bullg-memory",
+  "bullg/bullg-plugin-api",
+  "bullg/bullg-plugins",
+  "bullg/bullg-control-sync",
+  "bullg/bullg-utils",
+  "bullg/bullg-tracing",
+  "bullg/bullg-logger",
+  "bullg/bullg-gateway"
+]
+resolver = "2"
+
+[workspace.metadata]
+app-name = "BullG"
+app-version = "1.0.0"
+
+[workspace.package]
+edition = "2021"
+license = "MIT"
+authors = ["VIKSHRO INDIA <contact@vikshro.in>"]
+homepage = "https://vikshro.in"
+repository = "https://vikshro.in/bullg"
+readme = "README.md"
+
+[workspace.dependencies]
+# Common utils
+anyhow = "1"
+thiserror = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+toml = "0.8"
+clap = { version = "4", features = ["derive"] }
+regex = "1"
+uuid = { version = "1", features = ["v4", "serde"] }
+time = "0.3"
+url = "2"
+mime = "0.3"
+percent-encoding = "2"
+base64 = "0.22"
+jsonwebtoken = { version = "9", default-features = false, features = ["use_pem"] }
+dashmap = "6"
+moka = { version = "0.12", features = ["sync"] }
+parking_lot = "0.12"
+tempfile = "3"
+rmp-serde = "1"
+
+# Networking
+tokio = { version = "1", features = ["full","rt-multi-thread", "macros", "signal", "sync", "time"] }
+hyper = { version = "1", features = ["full"] }
+hyper-util = { version = "0.1", features = ["tokio"] }
+http = "1"
+http-body-util = "0.1"
+bytes = "1"
+reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
+tokio-tungstenite = { version = "0.23", features = ["rustls-tls-webpki-roots"] }
+tungstenite = { version = "0.23", features = ["rustls-tls-native-roots"] }
+rustls = { version = "0.23", default-features = false, features = ["logging", "std"] }
+rustls-pemfile = "2"
+
+# Observability (keep all versions in sync!)
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter","fmt", "json"] }
+opentelemetry = "0.30"
+opentelemetry_sdk = { version = "0.30", features = ["rt-tokio"] }
+opentelemetry-otlp = { version = "0.30", features = ["tonic", "grpc-tonic"] }
+tracing-opentelemetry = { version = "0.31", features = ["metrics"] }
+opentelemetry-stdout = "0.30"
+
+# Storage
+heed = "0.20"
+
+# Plugin runtimes
+pyo3 = { version = "0.22", features = ["auto-initialize"] }
+rquickjs = { version = "0.6", features = ["full"] }
+libloading = "0.8"
