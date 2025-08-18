@@ -1,6 +1,6 @@
 [workspace]
 members = [
-  "bullg/bullg-cli",
+  "bullg/bullg",
   "bullg/bullg-core",
   "bullg/bullg-config",
   "bullg/bullg-memory",

@@ -4,7 +4,7 @@
 BullG is a **high‑performance, multi‑protocol API & AI Gateway** inspired by Kong/Tyk, built in Rust for **throughput, tail‑latency, and safety**.  
 It supports HTTP/HTTPS/WS/WSS today and is designed to extend to gRPC/TCP in future. BullG provides a **flexible plugin system** with **pre / post / intermediate** phases and supports plugin authoring in **Rust, Python, and JavaScript** out of the box. (C via TinyCC or prebuilt shared libs is scaffolded.)
 
-> ⚠️ This repository is a **production‑grade skeleton** with working components and clear extension points. You can run it, route traffic, sync config from a control‑plane (WebSocket with HTTPS fallback), and execute built‑in plugins.
+> ⚠️ This repository is a **production‑grade skeleton** with working components and clear extension points. You can run it, route traffic, sync config from a control‑plane or From Tenants (WebSocket with HTTPS fallback), and execute built‑in plugins. For more info check BullG Anger Documents
 
 ## Features
 
@@ -28,14 +28,14 @@ It supports HTTP/HTTPS/WS/WSS today and is designed to extend to gRPC/TCP in fut
 cargo build --release
 
 # 2) Run gateway (auto‑detects config format)
-cargo run -p bullg-cli -- --config ./examples/config.yaml
+cargo run -p bullg -- --config ./examples/config.yaml
 ```
 
 See `examples/` for a working config and routes. Built‑in plugins are enabled in config and control‑plane state.
 
 ## Repository Layout
 
-- `bullg/bullg-cli` — binary launcher
+- `bullg/bullg` — binary launcher
 - `bullg/bullg-gateway` — HTTP/WS server and request pipeline
 - `bullg/bullg-core` — core domain models (Service, Route, Plugin, Consumer, etc.)
 - `bullg/bullg-config` — config parsing & defaults
