@@ -17,6 +17,7 @@ use tracing::{ error, info, debug };
 use url::Url;
 //use uuid::Uuid;
 use std::time::Instant;
+use chrono::{Datelike, Utc};
 
 #[derive(Clone)]
 pub struct Gateway {
@@ -139,7 +140,18 @@ impl Gateway {
             None => {
                 return Ok(
                     self.default_headers(
-                        simple(StatusCode::NOT_FOUND, Bytes::from_static(b"route not found")),
+                        simple(
+                            StatusCode::NOT_FOUND,
+                            Bytes::from(
+                                "<html><head><title>BullG: Route Not Found</title></head><body><h1>Not Found</h1><h2>Route not found</h2><p><b>Request id:</b> ".to_owned() +
+                                    &request_id +
+                                    "</p><br/><hr/> <center><p>" +
+                                    APP_NAME +
+                                    " Gateway " +
+                                    APP_VERSION + " &copy; "+ &Utc::now().year().to_string() +
+                                    "</p></center></body></html>"
+                            )
+                        ),
                         &request_id,
                         start
                     )
@@ -151,8 +163,6 @@ impl Gateway {
         let mut url = Url::parse(&upstream).unwrap();
         url.set_path(parts.uri.path());
         url.set_query(parts.uri.query());
-
-        
 
         let upstream_host = url.host_str().unwrap_or_default();
 
@@ -214,10 +224,29 @@ impl Gateway {
     ) -> Response<Full<Bytes>> {
         let latency_us = start.elapsed().as_micros().to_string();
         let latency_ms = start.elapsed().as_millis().to_string();
+
         resp.headers_mut().insert("Via", HeaderValue::from_str(APP_NAME).unwrap());
+        if !resp.headers_mut().get("Content-Type").is_some() {
+            let accept = resp.headers_mut().get("Accept");
+
+            //println!("Accept = {:?}", accept);
+            if ! accept.is_some() {
+                resp.headers_mut().insert(
+                    "Content-Type",
+                    HeaderValue::from_str("text/html").unwrap()
+                );
+            } else {
+                println!("Accept = {:?}", accept);
+                //resp.headers_mut().insert("Content-Type", );
+            }
+        }
         resp.headers_mut().insert(
             "Server",
             HeaderValue::from_str(&format!("{}/{}", APP_NAME, APP_VERSION)).unwrap()
+        );
+        resp.headers_mut().insert(
+            "X-Powered-By",
+            HeaderValue::from_str(&format!("{}-{}/VIKSHRO", APP_NAME, APP_VERSION)).unwrap()
         );
         resp.headers_mut().insert(
             "X-Server",

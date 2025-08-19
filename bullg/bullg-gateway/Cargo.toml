@@ -28,6 +28,7 @@ tracing = { workspace = true }
 url = { workspace = true }
 reqwest = { workspace = true }
 dashmap = { workspace = true }
+chrono = {workspace = true }
 bullg-core = { path = "../bullg-core" }
 bullg-plugin-api = { path = "../bullg-plugin-api" }
 bullg-plugins = { path = "../bullg-plugins" }
