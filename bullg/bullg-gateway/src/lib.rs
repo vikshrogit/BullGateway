@@ -29,7 +29,7 @@ pub struct Gateway {
 
 // Inject app name & version at compile-time from Cargo.toml
 const APP_NAME: &str = env!("APP_NAME");
-const APP_VERSION: &str = env!("APP_VERSION");
+const APP_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 impl Gateway {
     pub fn new(store: Store) -> Self {
@@ -152,6 +152,8 @@ impl Gateway {
         url.set_path(parts.uri.path());
         url.set_query(parts.uri.query());
 
+        
+
         let upstream_host = url.host_str().unwrap_or_default();
 
         // Modify headers: preserve original host and set forwarding headers
@@ -176,6 +178,7 @@ impl Gateway {
             url.as_str(),
             ctx.headers.read()
         );
+        let upstart = Instant::now();
         let resp = match rb.body(ctx.get_body().to_vec()).send().await {
             Ok(r) => r,
             Err(e) => {
@@ -189,7 +192,7 @@ impl Gateway {
                 );
             }
         };
-
+        info!("upstream Latency: {:?}", upstart.elapsed().as_millis().to_string());
         let status = StatusCode::from_u16(resp.status().as_u16()).unwrap();
         ctx.set_headers(resp.headers().clone());
         let bytes = resp.bytes().await.unwrap_or(Bytes::new());

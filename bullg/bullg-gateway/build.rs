@@ -10,16 +10,16 @@ fn main() {
     // parse manually for app-name and app-version
     let app_name = manifest_content
         .lines()
-        .find(|l| l.trim_start().starts_with("app-name"))
+        .find(|l| l.trim_start().starts_with("name"))
         .map(|l| l.split('=').nth(1).unwrap().trim().trim_matches('"'))
         .unwrap_or(env!("CARGO_PKG_NAME"));
 
-    let app_version = manifest_content
-        .lines()
-        .find(|l| l.trim_start().starts_with("app-version"))
-        .map(|l| l.split('=').nth(1).unwrap().trim().trim_matches('"'))
-        .unwrap_or(env!("CARGO_PKG_VERSION"));
+    // let app_version = manifest_content
+    //     .lines()
+    //     .find(|l| l.trim_start().starts_with("app-version"))
+    //     .map(|l| l.split('=').nth(1).unwrap().trim().trim_matches('"'))
+    //     .unwrap_or(env!("CARGO_PKG_VERSION"));
 
     println!("cargo:rustc-env=APP_NAME={}", app_name);
-    println!("cargo:rustc-env=APP_VERSION={}", app_version);
+    //println!("cargo:rustc-env=APP_VERSION={}", app_version);
 }

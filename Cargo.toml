@@ -1,6 +1,7 @@
 [workspace]
 members = [
   "bullg/bullg",
+  "bullg/bullg-crypto",
   "bullg/bullg-core",
   "bullg/bullg-config",
   "bullg/bullg-memory",
@@ -10,21 +11,27 @@ members = [
   "bullg/bullg-utils",
   "bullg/bullg-tracing",
   "bullg/bullg-logger",
+  "bullg/bullg-errors",
   "bullg/bullg-gateway"
 ]
 resolver = "3"
 
 [workspace.metadata]
-app-name = "BullG"
-app-version = "1.0.0"
+name = "BullG"
 
 [workspace.package]
+description = "BullG - 10x faster API & AI Gateway"
+version = "1.0.0"
 edition = "2024"
 license = "MIT"
-authors = ["VIKSHRO INDIA <contact@vikshro.in>"]
-homepage = "https://vikshro.in"
-repository = "https://vikshro.in/bullg"
+authors = ["Vikash Kumar <vikashkumar0037@gmail.com>"]
+homepage = "https://bullg.vikshro.in"
+repository = "https://github.com/vikshrogit/BullGateway"
+documentation = "https://bullg.vikshro.in/docs"
+keywords = ["gateway", "api", "ai", "bullg", "bullg-gateway", "bullg-api", "bullg-ai", "bullg-gateway-api", "bullg-ai-gateway"]
+categories = ["Networking", "Web", "AI", "Gateway", "API Management", "API Gateway", "AI Gateway"]
 readme = "README.md"
+license-file = "LICENSE"
 
 [workspace.dependencies]
 # Common utils
@@ -42,6 +49,11 @@ url = "2"
 mime = "0.3"
 percent-encoding = "2"
 base64 = "0.22"
+sha2 = "0.10"
+sha1 = "0.10"
+md-5 = "0.10"
+hmac = "0.12"
+rand = "0.9"
 jsonwebtoken = { version = "9", default-features = false, features = ["use_pem"] }
 dashmap = "6"
 moka = { version = "0.12", features = ["sync"] }
@@ -70,7 +82,7 @@ opentelemetry_sdk = { version = "0.30", features = ["rt-tokio"] }
 opentelemetry-otlp = { version = "0.30", features = ["tonic", "grpc-tonic"] }
 tracing-opentelemetry = { version = "0.31", features = ["metrics"] }
 opentelemetry-stdout = "0.30"
-
+futures-util = "0.3"
 # Storage
 heed = "0.22"
 

@@ -9,6 +9,7 @@ use std::sync::Arc;
 use tokio::signal;
 //use tokio::sync::RwLock;
 use tracing::info;
+use bullg_crypto::BullGCrypto;
 
 #[derive(Parser, Debug)]
 #[command(version, about="BullG — 10x Faster API & AI Gateway")]
@@ -25,6 +26,7 @@ struct Args {
 #[tokio::main(flavor = "multi_thread")]
 async fn main() -> Result<()> {
     let args = Args::parse();
+    info!("BullG Gateway starting with args: {:?}", args);
     let file = load_config(&args.config)?;
 
     // tracing
@@ -47,11 +49,14 @@ async fn main() -> Result<()> {
     // initial state update (requires mutability, so lock or interior mutability inside Gateway)
     gw.update_state(to_state(&file)).await;
 
+    let bcrypt = BullGCrypto::new(env!("CARGO_PKG_NAME"),env!("CARGO_PKG_VERSION"));
+
     // control-plane sync
     let sync = SyncClient::new(
         file.controlplane.url.clone(),
         file.controlplane.https_fallback_url.clone(),
         file.controlplane.id.clone(),
+        bcrypt,
     );
     let gw2 = gw.clone();
     tokio::spawn(async move {

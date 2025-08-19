@@ -8,6 +8,7 @@ use tokio::time::{sleep, Duration};
 use tokio_tungstenite::connect_async;
 use tracing::{error, info};
 //use core::slice::SlicePattern;
+use bullg_crypto::BullGCrypto;
 
 pub struct SyncClient {
     ws_url: String,
@@ -15,16 +16,18 @@ pub struct SyncClient {
     cp_id: String,
     client: Client,
     token_cache: Cache<&'static str, (String, i64)>,
+    bcrypt: BullGCrypto,
 }
 
 impl SyncClient {
-    pub fn new(ws_url: String, https_url: String, cp_id: String) -> Self {
+    pub fn new(ws_url: String, https_url: String, cp_id: String, bcrypt: BullGCrypto) -> Self {
         Self {
             ws_url,
             https_url,
             cp_id,
             client: Client::new(),
             token_cache: Cache::new(10),
+            bcrypt: bcrypt,
         }
     }
 

@@ -1,0 +1,51 @@
+# This Configuration file working only with bullg version 1.0.0
+gateway:
+  name: bullg-dev
+  host: 0.0.0.0
+  port: 8000
+  ssl: false
+  ssl_port: 8443
+  cert: ""
+  key: ""
+  ca: ""
+  logging_mode: info
+
+controlplane:
+  url: "ws://localhost:8000"
+  id: "bullg-001"
+  mtls_cert: ""
+  mtls_key: ""
+  mtls_ca: ""
+  https_fallback_url: "http://localhost:8000"
+  poll_interval_sec: 5
+
+tracing:
+  otlp_endpoint: "http://localhost:8000"
+  service_name: "bullg"
+
+memory:
+  engine: "lmdb"   # or "memory"
+  path: "./data/bullg.lmdb"
+
+# Minimal static services/routes until control-plane syncs
+services:
+  - id: "svc-dymmy"
+    name: "Dummy Services"
+    url: "https://dummy-json.mock.beeceptor.com"
+    routes:
+      - id: "r-roles"
+        path: "/roles"
+        methods: ["GET"]
+
+  - id: "svc-Users"
+    name: "Users Service"
+    url: "https://dummyjson.com"
+    routes:
+      - id: "r-users"
+        path: "/users"
+        methods: ["GET"]
+
+plugins:
+  global:
+    - { name: "cors", phase: "pre", config: { allow_origin: "*" } }
+    # - { name: "http_log", phase: "post", config: { endpoint: "http://localhost:8081/logs" } }

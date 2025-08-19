@@ -38,3 +38,5 @@ impl Default for Service {
         Self { id: Uuid::new_v4().to_string(), name: "svc".into(), url: String::new(), routes: vec![] }
     }
 }
+
+

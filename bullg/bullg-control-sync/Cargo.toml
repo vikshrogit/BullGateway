@@ -1,8 +1,18 @@
 
 [package]
 name = "bullg-control-sync"
-version = "1.0.0"
-edition = "2024"
+version = {workspace = true}
+edition = {workspace = true}
+authors = {workspace = true}
+description = "BullG Control Sync Library for managing BullG Gateway control synchronization."
+license = {workspace = true}
+repository = {workspace = true}
+homepage = {workspace = true}
+documentation = {workspace = true}
+keywords = {workspace = true}
+categories = {workspace = true}
+readme = {workspace = true}
+
 
 [dependencies]
 anyhow = { workspace = true }
@@ -14,6 +24,7 @@ tungstenite = { workspace = true }
 reqwest = { workspace = true }
 moka = { workspace = true }
 tracing = { workspace = true }
-futures-util = "0.3"
+futures-util = { workspace = true }
+bullg-crypto ={ path = "../bullg-crypto"}
 bullg-core = { path = "../bullg-core" }
 bullg-utils = { path = "../bullg-utils" }
