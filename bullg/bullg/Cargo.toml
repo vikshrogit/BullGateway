@@ -1,14 +1,25 @@
 
 [package]
 name = "bullg"
-version = "1.0.0"
-edition = "2021"
+version = {workspace = true}
+edition = {workspace = true}
+authors = {workspace = true}
+description = "BullG Gateway Application for managing and controlling BullG Gateway."
+license = {workspace = true}
+repository = {workspace = true}
+homepage = {workspace = true}
+documentation = {workspace = true}
+keywords = {workspace = true}
+categories = {workspace = true}
+readme = {workspace = true}
+
 
 [dependencies]
 anyhow = { workspace = true }
 clap = { workspace = true }
 tracing = { workspace = true }
 tokio = { workspace = true }
+bullg-crypto ={ path = "../bullg-crypto"}
 bullg-config = { path = "../bullg-config" }
 bullg-gateway = { path = "../bullg-gateway" }
 bullg-control-sync = { path = "../bullg-control-sync" }

@@ -1,13 +1,23 @@
 
 [package]
 name = "bullg-config"
-version = "1.0.0"
-edition = "2021"
+version = {workspace = true}
+edition = {workspace = true}
+authors = {workspace = true}
+description = "BullG Configuration Library for managing BullG Gateway configurations."
+license = {workspace = true}
+repository = {workspace = true}
+homepage = {workspace = true}
+documentation = {workspace = true}
+keywords = {workspace = true}
+categories = {workspace = true}
+readme = {workspace = true}
+
 
 [dependencies]
 serde = { workspace = true }
 serde_json = { workspace = true }
-serde_yaml = { workspace = true }
+serde_yml = { workspace = true }
 toml = { workspace = true }
 anyhow = { workspace = true }
 tracing = { workspace = true }

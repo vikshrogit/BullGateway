@@ -1,8 +1,18 @@
 
 [package]
 name = "bullg-tracing"
-version = "1.0.0"
-edition = "2021"
+version = {workspace = true}
+edition = {workspace = true}
+authors = {workspace = true}
+description = "Tracing and telemetry for BullG"
+license = {workspace = true}
+repository = {workspace = true}
+homepage = {workspace = true}
+documentation = {workspace = true}
+keywords = {workspace = true}
+categories = {workspace = true}
+readme = {workspace = true}
+
 
 [dependencies]
 tracing = { workspace = true }

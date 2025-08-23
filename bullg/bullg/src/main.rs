@@ -9,6 +9,7 @@ use std::sync::Arc;
 use tokio::signal;
 //use tokio::sync::RwLock;
 use tracing::info;
+//use bullg_crypto::BullGCrypto;
 
 #[derive(Parser, Debug)]
 #[command(version, about="BullG — 10x Faster API & AI Gateway")]
@@ -16,11 +17,16 @@ struct Args {
     /// Path to config file (yaml/json/toml)
     #[arg(short, long, default_value = "./config.yaml")]
     config: String,
+    #[arg(short, long, default_value = "")]
+    service: String,
+    #[arg(short, long, default_value = "")]
+    plugins: String,
 }
 
 #[tokio::main(flavor = "multi_thread")]
 async fn main() -> Result<()> {
     let args = Args::parse();
+    info!("BullG Gateway starting with args: {:?}", args);
     let file = load_config(&args.config)?;
 
     // tracing

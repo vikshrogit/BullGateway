@@ -1,8 +1,18 @@
 
 [package]
 name = "bullg-gateway"
-version = "1.0.0"
-edition = "2021"
+version = {workspace = true}
+edition = {workspace = true}
+authors = {workspace = true}
+description = "Gateway for BullG"
+license = {workspace = true}
+repository = {workspace = true}
+homepage = {workspace = true}
+documentation = {workspace = true}
+keywords = {workspace = true}
+categories = {workspace = true}
+readme = {workspace = true}
+
 
 [dependencies]
 anyhow = { workspace = true }
@@ -18,6 +28,7 @@ tracing = { workspace = true }
 url = { workspace = true }
 reqwest = { workspace = true }
 dashmap = { workspace = true }
+chrono = {workspace = true }
 bullg-core = { path = "../bullg-core" }
 bullg-plugin-api = { path = "../bullg-plugin-api" }
 bullg-plugins = { path = "../bullg-plugins" }

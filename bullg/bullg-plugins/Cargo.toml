@@ -1,8 +1,18 @@
 
 [package]
 name = "bullg-plugins"
-version = "1.0.0"
-edition = "2021"
+version = {workspace = true}
+edition = {workspace = true}
+authors = {workspace = true}
+description = "Collection of plugins for BullG"
+license = {workspace = true}
+repository = {workspace = true}
+homepage = {workspace = true}
+documentation = {workspace = true}
+keywords = {workspace = true}
+categories = {workspace = true}
+readme = {workspace = true}
+
 
 [dependencies]
 tokio = { workspace = true }
