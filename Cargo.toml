@@ -21,7 +21,7 @@ name = "BullG"
 
 [workspace.package]
 description = "BullG - 10x faster API & AI Gateway"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2024"
 license = "MIT"
 authors = ["Vikash Kumar <vikashkumar0037@gmail.com>"]
@@ -72,6 +72,9 @@ bytes = "1"
 reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
 tokio-tungstenite = { version = "0.27", features = ["rustls-tls-webpki-roots"] }
 tungstenite = { version = "0.27", features = ["rustls-tls-native-roots"] }
+form_urlencoded = "1.2.2"
+multer = "3.1"
+#multipart = "0.18.0"
 rustls = { version = "0.23", default-features = false, features = ["logging", "std"] }
 rustls-pemfile = "2"
 
@@ -88,6 +91,8 @@ futures-util = "0.3"
 heed = "0.22"
 
 # Plugin runtimes
-pyo3 = { version = "0.25", features = ["auto-initialize"] }
-rquickjs = { version = "0.9", features = ["full"] }
+fxhash = "0.2.1"
+rustpython-vm = { version = "0.4", default-features = false, features = ["serde"] }
+boa_engine = "0.20"
+rhai = { version = "1", features = ["serde"] }
 libloading = "0.8"

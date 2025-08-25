@@ -1,9 +1,19 @@
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
+
+fn def_id() -> String {
+    Uuid::new_v4().into()
+}
+
+fn def_version() -> String {
+    "1.0".into()
+}
 
 // ---------- services.yaml ----------
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct ServicesTemplate {
     pub gateway: String,
+    #[serde(default = "def_version")]
     pub version: String,
     #[serde(rename = "release")]
     pub release_channel: String,
@@ -14,14 +24,15 @@ pub struct ServicesTemplate {
     pub services: Vec<Service>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct GlobalApplied {
     pub plugins: Vec<AppliedPlugin>,
     pub policies: Vec<AppliedPolicy>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Service {
+    #[serde(default = "def_id")]
     pub id: String,
     pub name: String,
     pub description: String,
@@ -38,13 +49,13 @@ pub struct Service {
     pub routes: Vec<Route>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct ServiceSpec {
     pub enabled: bool,
     pub route: String,
     pub versions: Vec<String>,
 }
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct ServiceVersion {
     pub id: String,
     pub name: String,
@@ -52,7 +63,7 @@ pub struct ServiceVersion {
     pub description: String,
     pub deprecated: bool,
 }
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Upstream {
     pub id: String,
     pub name: String,
@@ -64,17 +75,17 @@ pub struct Upstream {
     pub enabled: bool,
     pub versions: Vec<String>,
 }
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct ServiceContextPaths {
     pub enable: bool,
     pub paths: Vec<ContextPath>,
 }
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct ContextPath {
     pub path: String,
     pub versions: Vec<String>,
 }
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct AppliedPlugin {
     pub id: String,
     pub name: String,
@@ -90,7 +101,7 @@ pub struct AppliedPlugin {
     pub order: Option<u32>,
     pub priority: Option<u32>,
 }
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct AppliedPolicy {
     pub id: String,
     pub name: String,
@@ -102,14 +113,14 @@ pub struct AppliedPolicy {
     pub version: Option<Vec<String>>,
     pub config: Option<serde_json::Value>,
 }
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct ServiceConsumer {
     pub id: String,
     pub enabled: bool,
     pub versions: Vec<String>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct Route {
     pub id: String,
     pub name: String,
@@ -120,7 +131,7 @@ pub struct Route {
     pub config: RouteConfig,
     pub plugins: Vec<AppliedPlugin>,
 }
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct RouteConfig {
     pub protocols: Vec<String>,
     pub path: String,
