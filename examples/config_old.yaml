@@ -1,6 +1,6 @@
-# This Configuration file working only with bullg version 1.0.0
+# This Configuration file working only with src version 1.0.0
 gateway:
-  name: bullg-dev
+  name: src-dev
   host: 0.0.0.0
   port: 8000
   ssl: false
@@ -12,7 +12,7 @@ gateway:
 
 controlplane:
   url: "ws://localhost:8000"
-  id: "bullg-001"
+  id: "src-001"
   mtls_cert: ""
   mtls_key: ""
   mtls_ca: ""
@@ -21,11 +21,11 @@ controlplane:
 
 tracing:
   otlp_endpoint: "http://localhost:8000"
-  service_name: "bullg"
+  service_name: "src"
 
 memory:
   engine: "lmdb"   # or "memory"
-  path: "./data/bullg.lmdb"
+  path: "./data/src.lmdb"
 
 # Minimal static services/routes until control-plane syncs
 services:

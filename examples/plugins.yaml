@@ -1,8 +1,8 @@
 # This Yaml is used for Plugins Configuration
 # It contains logic for plugins, including their names, logic while for builtin plugins generate rust code for plugins handlers
 
-# for each builtin plugins in bullg_plugins package create multiple plugins folder with their names, schema, and handler as library which is used by bullg binary
-# for custom plugins create language specific folder with their names as library which is used by bullg binary which is used at runtime for custom plugins as per below structure for particular language so that it can be faster executions
+# for each builtin plugins in bullg_plugins package create multiple plugins folder with their names, schema, and handler as library which is used by src binary
+# for custom plugins create language specific folder with their names as library which is used by src binary which is used at runtime for custom plugins as per below structure for particular language so that it can be faster executions
 plugins:
   builtin:
     - id: cors # ID for the CORS plugin
@@ -13,14 +13,14 @@ plugins:
         - cors
         - security
         - builtin
-        - bullg
+        - src
       enabled: true # Enable or disable the CORS plugin
       version: "1.0.0" # Version of the CORS plugin
       type: "builtin" # Type of the plugin, can be 'builtin' or 'custom'
       phases: # Phases in which the plugin will be executed, can be 'pre' or 'post' or 'import'
         - pre # Pre-phase execution
       schema: # Schema for the CORS plugin
-        id: "bullg::plugins::cors_schema" # ID for the schema of the CORS plugin
+        id: "src::plugins::cors_schema" # ID for the schema of the CORS plugin
         name: "CorsPluginSchema" # Name of the schema
         description: "Schema for CORS plugin configuration" # Description of the schema
         type: object # Type of the schema
@@ -43,7 +43,7 @@ plugins:
           - allow_methods # Required property for allowed methods
           - allow_headers # Required property for allowed headers
         handler:
-          id: "bullg::plugins::cors_handler" # ID for the handler of the CORS plugin
+          id: "src::plugins::cors_handler" # ID for the handler of the CORS plugin
           name: "cors_handler" # Name of the handler for the CORS plugin (This will be generated in Rust)
           language: rust # Language for the plugin handler
           code: | # Code for the CORS plugin handler which will used under Apply Function inside Plugins class for Builtin Plugins
@@ -103,7 +103,7 @@ plugins:
       phases:
         - pre # Pre-phase execution
       schema:
-        id: "bullg::plugins::custom_auth_schema" # ID for the schema of the Custom Auth plugin
+        id: "src::plugins::custom_auth_schema" # ID for the schema of the Custom Auth plugin
         name: "CustomAuthPluginSchema" # Name of the schema
         description: "Schema for Custom Auth plugin configuration" # Description of the schema
         type: object # Type of the schema
@@ -118,7 +118,7 @@ plugins:
           - auth_type # Required property for authentication type
           - token_secret # Required property for token secret
         handler:
-          id: "bullg::plugins::custom_auth_handler" # ID for the handler of the Custom Auth plugin
+          id: "src::plugins::custom_auth_handler" # ID for the handler of the Custom Auth plugin
           name: "custom_auth_handler" # Name of the handler for the Custom Auth plugin (This will be generated in Rust)
           language: python # Language for the plugin handler
           code: | # Code for the Custom Auth plugin handler which will used under Apply Function inside Plugins class for Custom Plugins
@@ -165,21 +165,21 @@ policies:
       - rate_limiting
       - security
       - builtin
-      - bullg
+      - src
     enabled: true # Enable or disable the Rate Limiting policy
     version: "1.0.0" # Version of the Rate Limiting policy
     type: "builtin" # Type of the policy, can be 'builtin' or 'custom'
     phases:
       - pre # Pre-phase execution
     schema:
-      id: "bullg::policies::rate_limiting_schema" # ID for the schema of the Rate Limiting policy
+      id: "src::policies::rate_limiting_schema" # ID for the schema of the Rate Limiting policy
       name: "RateLimitingPolicySchema" # Name of the schema
       description: "Schema for Rate Limiting policy configuration" # Description of the schema
       type: object # Type of the schema
       properties:
          # Generate based on Global Based Policies schema which is used in Service Configurations
       handler:
-        id: "bullg::policies::rate_limiting_handler" # ID for the handler of the Rate Limiting policy
+        id: "src::policies::rate_limiting_handler" # ID for the handler of the Rate Limiting policy
         name: "rate_limiting_handler" # Name of the handler for the Rate Limiting policy (This will be generated in Rust)
         language: rust # Language for the policy handler
         code: | # Code for the Rate Limiting policy handler which will used under Apply Function  

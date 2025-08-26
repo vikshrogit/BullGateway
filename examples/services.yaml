@@ -5,7 +5,7 @@ version: 1.0.1
 release: dev
 bullg-versions: # This is version for internal Application manager which give info which version of dataplanes supports this structures
   - 1.0.1
-developer: bullg@vikshro.in
+developer: src@vikshro.in
 global:
   plugins: # These are reusable components that can be applied to multiple services and also customize by User based on Language
     - id: global-plugin

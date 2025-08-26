@@ -1,18 +1,18 @@
 [workspace]
 members = [
-  "bullg/bullg",
-  "bullg/bullg-crypto",
-  "bullg/bullg-core",
-  "bullg/bullg-config",
-  "bullg/bullg-memory",
-  "bullg/bullg-plugin-api",
-  "bullg/bullg-plugins",
-  "bullg/bullg-control-sync",
-  "bullg/bullg-utils",
-  "bullg/bullg-tracing",
-  "bullg/bullg-logger",
-  "bullg/bullg-errors",
-  "bullg/bullg-gateway"
+  "src/bullg",
+  "src/bullg-crypto",
+  "src/bullg-core",
+  "src/bullg-config",
+  "src/bullg-memory",
+  "src/bullg-plugin-api",
+  "src/bullg-plugins",
+  "src/bullg-control-sync",
+  "src/bullg-utils",
+  "src/bullg-tracing",
+  "src/bullg-logger",
+  "src/bullg-errors",
+  "src/bullg-gateway"
 ]
 resolver = "3"
 
@@ -28,7 +28,7 @@ authors = ["Vikash Kumar <vikashkumar0037@gmail.com>"]
 homepage = "https://bullg.vikshro.in"
 repository = "https://github.com/vikshrogit/BullGateway"
 documentation = "https://bullg.vikshro.in/docs"
-keywords = ["gateway", "api", "ai", "bullg", "bullg-gateway", "bullg-api", "bullg-ai", "bullg-gateway-api", "bullg-ai-gateway"]
+keywords = ["bullg", "bullg-gateway", "bullg-api", "bullg-gateway-api", "bullg-ai-gateway"]
 categories = ["Networking", "Web", "AI", "Gateway", "API Management", "API Gateway", "AI Gateway"]
 readme = "README.md"
 license-file = "LICENSE"
@@ -92,7 +92,9 @@ heed = "0.22"
 
 # Plugin runtimes
 fxhash = "0.2.1"
-rustpython-vm = { version = "0.4", default-features = false, features = ["serde"] }
+pyo3 = "0.25.1"
+#rustpython-vm = { version = "0.4", default-features = false, features = ["serde"] }
+#rustpython-compiler = "0.4"
 boa_engine = "0.20"
 rhai = { version = "1", features = ["serde"] }
 libloading = "0.8"

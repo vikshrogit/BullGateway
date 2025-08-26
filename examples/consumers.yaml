@@ -8,7 +8,7 @@ consumers:
       - consumer
     metadata:
       team: example
-      project: bullg
+      project: src
     policies:
       - id: cors
         name: "CORS Policy"
@@ -59,7 +59,7 @@ apps:
       - app
     metadata:
       team: example
-      project: bullg
+      project: src
 
 
 consumer-groups:
@@ -74,4 +74,4 @@ consumer-groups:
       - consumer_group
     metadata:
       team: example
-      project: bullg
+      project: src

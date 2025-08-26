@@ -31,7 +31,7 @@ futures-util = { workspace = true }
 heed = { workspace = true }
 dashmap = { workspace = true }
 rmp-serde = { workspace = true }
-rustpython-vm = { workspace = true }
+pyo3 = { workspace = true }
 boa_engine = { workspace = true }
 rhai = { workspace = true }
 fxhash = { workspace = true }
