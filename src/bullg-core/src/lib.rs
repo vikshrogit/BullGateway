@@ -1,3 +1,5 @@
+pub mod models;
+pub mod core;
 
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;

@@ -143,13 +143,19 @@ impl Gateway {
                         simple(
                             StatusCode::NOT_FOUND,
                             Bytes::from(
-                                "<html><head><title>BullG: Route Not Found</title></head><body><h1>Not Found</h1><h2>Route not found</h2><p><b>Request id:</b> ".to_owned() +
-                                    &request_id +
-                                    "</p><br/><hr/> <center><p>" +
-                                    APP_NAME +
-                                    " Gateway " +
-                                    APP_VERSION + " &copy; "+ &Utc::now().year().to_string() +
-                                    "</p></center></body></html>"
+                                format!(
+                                    "<html><head><title>BullG: Route Not Found</title></head>\
+                                    <body><h1>Not Found</h1>\
+                                    <h2>Route not found</h2>\
+                                    <p><b>Request id:</b> {request_id}</p>\
+                                    <br/><hr/> \
+                                    <center><p>{app_name} Gateway {app_version} &copy; {year}</p></center>\
+                                    </body></html>",
+                                    request_id = request_id,
+                                    app_name = APP_NAME,
+                                    app_version = APP_VERSION,
+                                    year = Utc::now().year()
+                                )
                             )
                         ),
                         &request_id,

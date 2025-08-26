@@ -8,18 +8,18 @@
 # The file is structured to allow easy modification and understanding of the settings.
 # It is User for Bullg Gateway or Tenant Plane for Version 1.0.1 onwards. It is not compatible with previous versions.
 gateway:
-  name: bullg-dev # Name of the Gateway or Used for Hostname for Dataplane or Tenant Plane
-  id: bullg-dev-001 # Unique ID for the Gateway or Used for Hostname
+  name: src-dev # Name of the Gateway or Used for Hostname for Dataplane or Tenant Plane
+  id: src-dev-001 # Unique ID for the Gateway or Used for Hostname
   type: dataplane # Type of the Gateway, can be 'dataplane' or 'tenantplane'
   version: v1.0.1 # Version of the Gateway or Tenant Plane
   tags: # Tags for the Gateway or Tenant Plane, can be used for filtering or grouping
     - development
     - example
-    - bullg
+    - src
   labels: # Labels for the Gateway or Tenant Plane, can be used for filtering or grouping
     environment: development
     team: example
-    project: bullg
+    project: src
   description: "Bullg Gateway for Development" # Description of the Gateway Dataplane or Tenant Plane
   proxy:
     enabled: false # Enable or disable the proxy for the Gateway or Tenant Plane if false then it will only allow localhost access
@@ -59,7 +59,7 @@ gateway:
   tracing:
     enabled: false # Enable or disable tracing for the Gateway or Tenant Plane
     otlp_endpoint: "http://localhost:4317" # OTLP endpoint for tracing
-    service_name: "bullg-gateway" # Service name for tracing
+    service_name: "src-gateway" # Service name for tracing
 
   control_plane:
     enabled: false # Enable or disable control plane for the Gateway or Tenant Plane
@@ -67,7 +67,7 @@ gateway:
       - https
       - wss
     host: "localhost" # URL for the control plane
-    id: "bullg-001" # Unique ID for the control plane
+    id: "src-001" # Unique ID for the control plane
     mtls_cert: "" # mTLS certificate for the control plane, Same used for HTTP fallback sync as public cert pass for token Generation
     mtls_key: "" # mTLS key for the control plane
     poll_interval_sec: 5 # Polling interval for the control plane in seconds
@@ -81,4 +81,4 @@ gateway:
   
   memory: # Memory Engine for the Gateway or Tenant Plane, can be 'lmdb' or 'memory'
     engine: "lmdb"   # or "memory"
-    path: "./data/bullg.lmdb" # Path for the memory engine, only used for 'lmdb' engine
+    path: "./data/src.lmdb" # Path for the memory engine, only used for 'lmdb' engine

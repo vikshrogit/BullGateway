@@ -1,18 +1,18 @@
 [workspace]
 members = [
-  "bullg/bullg",
-  "bullg/bullg-crypto",
-  "bullg/bullg-core",
-  "bullg/bullg-config",
-  "bullg/bullg-memory",
-  "bullg/bullg-plugin-api",
-  "bullg/bullg-plugins",
-  "bullg/bullg-control-sync",
-  "bullg/bullg-utils",
-  "bullg/bullg-tracing",
-  "bullg/bullg-logger",
-  "bullg/bullg-errors",
-  "bullg/bullg-gateway"
+  "src/bullg",
+  "src/bullg-crypto",
+  "src/bullg-core",
+  "src/bullg-config",
+  "src/bullg-memory",
+  "src/bullg-plugin-api",
+  "src/bullg-plugins",
+  "src/bullg-control-sync",
+  "src/bullg-utils",
+  "src/bullg-tracing",
+  "src/bullg-logger",
+  "src/bullg-errors",
+  "src/bullg-gateway"
 ]
 resolver = "3"
 
@@ -21,14 +21,14 @@ name = "BullG"
 
 [workspace.package]
 description = "BullG - 10x faster API & AI Gateway"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2024"
 license = "MIT"
 authors = ["Vikash Kumar <vikashkumar0037@gmail.com>"]
 homepage = "https://bullg.vikshro.in"
 repository = "https://github.com/vikshrogit/BullGateway"
 documentation = "https://bullg.vikshro.in/docs"
-keywords = ["gateway", "api", "ai", "bullg", "bullg-gateway", "bullg-api", "bullg-ai", "bullg-gateway-api", "bullg-ai-gateway"]
+keywords = ["bullg", "bullg-gateway", "bullg-api", "bullg-gateway-api", "bullg-ai-gateway"]
 categories = ["Networking", "Web", "AI", "Gateway", "API Management", "API Gateway", "AI Gateway"]
 readme = "README.md"
 license-file = "LICENSE"
@@ -72,6 +72,9 @@ bytes = "1"
 reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
 tokio-tungstenite = { version = "0.27", features = ["rustls-tls-webpki-roots"] }
 tungstenite = { version = "0.27", features = ["rustls-tls-native-roots"] }
+form_urlencoded = "1.2.2"
+multer = "3.1"
+#multipart = "0.18.0"
 rustls = { version = "0.23", default-features = false, features = ["logging", "std"] }
 rustls-pemfile = "2"
 
@@ -88,6 +91,10 @@ futures-util = "0.3"
 heed = "0.22"
 
 # Plugin runtimes
-pyo3 = { version = "0.25", features = ["auto-initialize"] }
-rquickjs = { version = "0.9", features = ["full"] }
+fxhash = "0.2.1"
+pyo3 = "0.25.1"
+#rustpython-vm = { version = "0.4", default-features = false, features = ["serde"] }
+#rustpython-compiler = "0.4"
+boa_engine = "0.20"
+rhai = { version = "1", features = ["serde"] }
 libloading = "0.8"
