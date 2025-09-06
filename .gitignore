@@ -12,3 +12,11 @@ data/
 
 .idea
 .idea/
+
+output.*
+input/*
+input/
+*/input/*
+output/*
+output/
+*/output/*

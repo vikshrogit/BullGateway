@@ -1,21 +1,23 @@
-pub mod gateway;
+pub mod config;
 pub mod plugins;
 pub mod services;
 pub mod consumers;
 pub mod globals;
 
 pub use consumers::*;
-pub use gateway::*;
+pub use config::*;
 pub use globals::*;
 pub use plugins::*;
+pub use services::*;
+
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use serde_yml;
-pub use services::*;
 use std::fs;
 use toml;
 use uuid::Uuid;
+use std::fmt::Debug;
 
 fn def_snapid() -> Uuid {
     Uuid::new_v4()
@@ -123,12 +125,12 @@ impl RuntimeSnapshot {
     }
 }
 
-// This function return GatewayConfig, PluginsCatalog,
 fn read_file<T>(path: &str) -> T
 where
-    T: DeserializeOwned + Default,
+    T: DeserializeOwned + Default + Debug,
 {
     let content = fs::read_to_string(path);
+    //println!("🔍 Loading Content: {:?}", content);
 
     match content {
         Ok(content) => {
@@ -143,15 +145,17 @@ where
             };
 
             match parsed {
-                Ok(val) => val,
-                Err(e) => {
-                    eprintln!("⚠️ Failed to parse config file `{}`: {}", path, e);
+                Ok(val) => {
+                    val
+                },
+                Err(_e) => {
+                    eprintln!("⚠️ Failed to parse config file `{}`: {}", path, _e);
                     T::default()
                 }
             }
         }
-        Err(e) => {
-            eprintln!("⚠️ Failed to read config file `{}`: {}", path, e);
+        Err(_e) => {
+            //eprintln!("⚠️ Failed to read config file `{}`: {}", path, _e);
             T::default()
         }
     }
