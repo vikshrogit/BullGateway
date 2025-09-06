@@ -81,4 +81,4 @@ gateway:
   
   memory: # Memory Engine for the Gateway or Tenant Plane, can be 'lmdb' or 'memory'
     engine: "lmdb"   # or "memory"
-    path: "./data/src.lmdb" # Path for the memory engine, only used for 'lmdb' engine
+    path: "./data/bullg.lmdb" # Path for the memory engine, only used for 'lmdb' engine

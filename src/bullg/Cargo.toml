@@ -19,10 +19,12 @@ anyhow = { workspace = true }
 clap = { workspace = true }
 tracing = { workspace = true }
 tokio = { workspace = true }
-bullg-crypto ={ path = "../bullg-crypto"}
-bullg-config = { path = "../bullg-config" }
-bullg-gateway = { path = "../bullg-gateway" }
-bullg-control-sync = { path = "../bullg-control-sync" }
-bullg-tracing = { path = "../bullg-tracing" }
-bullg-memory = { path = "../bullg-memory" }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
 bullg-core = { path = "../bullg-core" }
+# bullg-crypto ={ path = "../bullg-crypto"}
+# bullg-config = { path = "../bullg-config" }
+# bullg-gateway = { path = "../bullg-gateway" }
+# bullg-control-sync = { path = "../bullg-control-sync" }
+# bullg-tracing = { path = "../bullg-tracing" }
+# bullg-memory = { path = "../bullg-memory" }
