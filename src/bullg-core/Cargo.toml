@@ -23,12 +23,10 @@ regex = { workspace = true }
 uuid = { workspace = true }
 anyhow = { workspace = true }
 http = { workspace = true }
-bytes = { workspace = true }
 reqwest = { workspace = true }
 form_urlencoded = { workspace = true }
 tokio = { workspace = true }
 rayon = { workspace = true }
-#async-trait = { workspace = true }
 matchit = { workspace = true }
 multer = { workspace = true }
 futures-util = { workspace = true }
@@ -39,3 +37,16 @@ pyo3 = { workspace = true, features = ["auto-initialize"] }
 boa_engine = { workspace = true }
 rhai = { workspace = true }
 fxhash = { workspace = true }
+hyper = { workspace = true}
+tower = {workspace = true}
+tokio-tungstenite = {workspace = true}
+tonic = {workspace = true}
+h3 = {workspace = true}
+quinn = { workspace = true }
+parking_lot = {workspace = true}
+bytes = { workspace = true }
+futures = {workspace = true}
+tracing = {workspace = true}
+rustls = {workspace = true}
+tokio-rustls = {workspace = true}
+rustls-pemfile = {workspace = true}

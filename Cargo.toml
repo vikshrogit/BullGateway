@@ -70,6 +70,7 @@ tokio = { version = "1", features = ["full","rt-multi-thread", "macros", "signal
 hyper = { version = "1.7", features = ["full"] }
 hyper-util = { version = "0.1", features = ["tokio"] }
 http = "1"
+h3 = "0.0.8"
 http-body-util = "0.1"
 bytes = "1"
 reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
@@ -78,9 +79,14 @@ tungstenite = { version = "0.27", features = ["rustls-tls-native-roots"] }
 form_urlencoded = "1.2.2"
 multer = "3.1"
 matchit = { version = "0.8"}
+quinn = "0.11"
+tonic = {version = "0.14", features = ["transport"]}
+tower = "0.5"
+futures = "0.3"
 #multipart = "0.18.0"
 rustls = { version = "0.23", default-features = false, features = ["logging", "std"] }
 rustls-pemfile = "2"
+tokio-rustls = "0.26"
 
 # Observability (keep all versions in sync!)
 tracing = "0.1"

@@ -580,12 +580,12 @@ pub struct RouteConfig {
 
 
 #[derive(Debug, Clone, Default)]
-pub struct BullGService {
+pub struct BullGRouter {
     pub services: Router<Arc<Service>>,
     pub default_services: Vec<Arc<Service>>,
 }
 
-impl BullGService {
+impl BullGRouter {
     pub fn new() -> Self {
         let services:Router<Arc<Service>> = Router::new();
         Self {
@@ -619,6 +619,20 @@ impl BullGService {
                 self.default_services.push(Arc::new(map.value.clone()));
             }
         }
+        Ok(())
+    }
+    
+    pub fn update_service_mappers(&mut self, servicemaps: Vec<ServiceMapper>) -> Result<()> {
+        // need more logic for update services
+        for map in servicemaps.iter() {
+            if map.value.context_paths.enable{
+                let mut path = map.key.trim_end_matches("/").to_string();
+                if !path.starts_with('/') { path = format!("/{}", path); }
+                path = format!("{}/{}",path,"{*routes}");
+                let _ = self.services.insert(&path, Arc::new(map.value.clone()));
+            }
+        }
+        
         Ok(())
     }
 
@@ -731,7 +745,7 @@ impl BullGRoute {
     pub fn remove_route(&mut self, path: &str) -> Option<Arc<Route>> {
         self.routes.remove(path)
     }
-    
+
     pub fn find_route(&self, path: &str) -> Option<Arc<Route>> {
         if let Ok(matched) = self.routes.at(path) {
             Some(matched.value.clone())

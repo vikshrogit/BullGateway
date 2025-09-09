@@ -1,5 +1,5 @@
 use anyhow::Result;
-use bullg_core::{load_all, Memory, ToServicesMapperVec, BullGService};
+use bullg_core::{load_all, Memory, ToServicesMapperVec, BullGRouter};
 use clap::Parser;
 use tokio::time::Instant;
 
@@ -28,26 +28,26 @@ async fn main() -> Result<()> {
         Memory::memory()
     };
 
-    let mut start = Instant::now();
-    let servicemaps = config.services.get_services_map_vec().services;
-    println!("Service Map Length: {}", servicemaps.len());
-    let mut router = BullGService::new();
-    let _ = router.add_service_mapper(servicemaps);
-
-    println!("Service mappers loaded in {}ms", start.elapsed().as_millis());
-    start = Instant::now();
-    let mut r_path = "/dummy/test/users";
-    if let Some((svc, params)) = router.find_service(r_path) {
-        println!("Services: {:?}", svc.context_paths);
-        let mut sub_path = r_path.trim_start_matches(&svc.context_paths.paths[0].path);
-        if !sub_path.starts_with("/") { sub_path = format!("/{}", sub_path).leak(); }
-        if let Some(route) = svc.router.find_route(sub_path){
-            println!("Route: {:?}", route.config);
-        }
-        println!("Parameters: {:?}", params);
-    }
-
-    println!("Service mappers loaded in {}ms", start.elapsed().as_millis());
+    // let mut start = Instant::now();
+    // let servicemaps = config.services.get_services_map_vec().services;
+    // println!("Service Map Length: {}", servicemaps.len());
+    // let mut router = BullGRouter::new();
+    // let _ = router.add_service_mapper(servicemaps);
+    // 
+    // println!("Service mappers loaded in {}ms", start.elapsed().as_millis());
+    // start = Instant::now();
+    // let mut r_path = "/dummy/test/users";
+    // if let Some((svc, params)) = router.find_service(r_path) {
+    //     println!("Services: {:?}", svc.context_paths);
+    //     let mut sub_path = r_path.trim_start_matches(&svc.context_paths.paths[0].path);
+    //     if !sub_path.starts_with("/") { sub_path = format!("/{}", sub_path).leak(); }
+    //     if let Some(route) = svc.router.find_route(sub_path){
+    //         println!("Route: {:?}", route.config);
+    //     }
+    //     println!("Parameters: {:?}", params);
+    // }
+    // 
+    // println!("Service mappers loaded in {}ms", start.elapsed().as_millis());
 
     Ok(())
 }
