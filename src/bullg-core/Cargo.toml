@@ -50,3 +50,7 @@ tracing = {workspace = true}
 rustls = {workspace = true}
 tokio-rustls = {workspace = true}
 rustls-pemfile = {workspace = true}
+rcgen = {workspace = true}
+pem = {workspace = true}
+#openssl = {workspace = true}
+#thiserror = {workspace = true}

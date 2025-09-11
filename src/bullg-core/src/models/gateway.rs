@@ -15,43 +15,6 @@ use rustls::pki_types::{CertificateDer,PrivateKeyDer};
 use crate::{BullGRouter, ToServicesMapperVec, RuntimeSnapshot, GlobalApplied, Memory, GatewayNode, Service, ToServiceMapper};
 use anyhow::{Result, Context};
 
-
-pub fn make_tls_config(cert_path: &str, key_path: &str) -> Result<ServerConfig> {
-    // --- Load certificates ---
-    let cert_file = File::open(cert_path)
-        .with_context(|| format!("cannot open certificate file: {}", cert_path))?;
-    let mut cert_reader = BufReader::new(cert_file);
-
-    let certs: Vec<CertificateDer<'static>> = certs(&mut cert_reader)
-        .collect::<std::result::Result<Vec<_>, _>>()
-        .with_context(|| format!("failed to parse certificates from: {}", cert_path))?;
-
-    // --- Load private key ---
-    let key_file = File::open(key_path)
-        .with_context(|| format!("cannot open private key file: {}", key_path))?;
-    let mut key_reader = BufReader::new(key_file);
-
-    let key = loop {
-        match read_one(&mut key_reader)
-            .with_context(|| format!("failed to parse key file: {}", key_path))?
-        {
-            Some(Item::Pkcs8Key(k)) => break PrivateKeyDer::Pkcs8(k),
-            Some(Item::Pkcs1Key(k)) => break PrivateKeyDer::Pkcs1(k),
-            Some(Item::Sec1Key(k))  => break PrivateKeyDer::Sec1(k),
-            Some(_) => continue, // skip unrelated PEM blocks
-            None => anyhow::bail!("no keys found in {}", key_path),
-        }
-    };
-
-    let config = ServerConfig::builder()
-        .with_no_client_auth()
-        .with_single_cert(certs, key)
-        .context("invalid certificate/key pair")?;
-
-    Ok(config)
-}
-
-
 struct BullConfig {
     gateway: GatewayNode,
     router: RwLock<BullGRouter>,
@@ -143,6 +106,10 @@ impl BullG {
            let  tls_acceptor = TlsAcceptor::from(Arc::new(make_tls_config(gcfg.cert.as_str(),gcfg.key.as_str())?));
         }else {
             let  tls_connector: std::option::Option<TlsAcceptor> = None;
+        }
+
+        if gcfg.ssl{
+
         }
 
         // spawn HTTP server if configured

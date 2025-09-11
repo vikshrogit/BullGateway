@@ -3,14 +3,12 @@ pub mod plugins;
 pub mod services;
 pub mod consumers;
 pub mod globals;
-pub mod gateway;
 
 pub use consumers::*;
 pub use config::*;
 pub use globals::*;
 pub use plugins::*;
 pub use services::*;
-pub use gateway::*;
 
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};

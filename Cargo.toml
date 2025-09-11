@@ -64,6 +64,8 @@ chrono = "0.4"
 # Parallel CPU work
 rayon = "1.8"
 async-trait = "0.1"
+rcgen = "0.14"
+#openssl = "0.10"
 
 # Networking
 tokio = { version = "1", features = ["full","rt-multi-thread", "macros", "signal", "sync", "time"] }
@@ -87,6 +89,7 @@ futures = "0.3"
 rustls = { version = "0.23", default-features = false, features = ["logging", "std"] }
 rustls-pemfile = "2"
 tokio-rustls = "0.26"
+pem = "3.0"
 
 # Observability (keep all versions in sync!)
 tracing = "0.1"
